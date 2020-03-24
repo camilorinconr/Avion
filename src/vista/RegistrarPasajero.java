@@ -1,7 +1,7 @@
 package vista;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import modelo.Avion;
 
 import modelo.Clase;
 
@@ -15,8 +15,9 @@ import vista.datosPasajero;
  * @author CAMILO
  */
 public class RegistrarPasajero extends javax.swing.JFrame {
- Silla silla = new Silla();
- 
+
+    Silla silla = new Silla();
+
     /*
      * Creates new form RegistrarPasajero
      */
@@ -202,50 +203,80 @@ public class RegistrarPasajero extends javax.swing.JFrame {
     }//GEN-LAST:event_txtnombreActionPerformed
 
     private void btnregistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregistrarActionPerformed
- 
+        Clase clase = null;
+        Ubicacion ubicacion = null;
+        Pasajero pasajero;
+        Avion avion = null;
+        datosPasajero datos;
+        Vista vista;
+
         String nombre = txtnombre.getText();
         String cedula = txtcedula.getText();
-        String comclase = boxclase.getSelectedItem().toString();
-        String comubicacion = boxubicacion.getSelectedItem().toString();
-        txtnombre.setText("");
-        txtcedula.setText("");
+        // String comclase = boxclase.getSelectedItem().toString();
+        //String comubicacion = boxubicacion.getSelectedItem().toString();
+        //txtnombre.setText("");
+        //txtcedula.setText("");
 
-        datosPasajero.gnombre.setText(nombre);
-        datosPasajero.gcedula.setText(cedula);
-        datosPasajero.gclase.setText(comclase);
-        datosPasajero.gubicacion.setText(comubicacion);
+        if (nombre == null || nombre.equals(" ")) {
+            JOptionPane.showMessageDialog(this, "El nombre es requerida", " Registro", JOptionPane.ERROR_MESSAGE);
 
+        } else {
+            if (cedula == null || cedula.equals(" ")) {
+                JOptionPane.showMessageDialog(this, "La cedula es requerida", " Registro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                // crea al pasajero
+                pasajero = new Pasajero(nombre, cedula);
+
+                //verifica que no este ya el pasajero registrado
+                Silla silla = avion.buscarPasajero(pasajero);
+
+                if (silla != null) {
+                    JOptionPane.showMessageDialog(this, "El pasajero ya tiene una silla asignada", "Registro", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    //registra el pasajero
+                    String comclase = boxclase.getSelectedItem().toString();
+                    // String sclase = (String) boxclase.getSelectedItem();
+                    if (comclase.equals(clase.EJERCUTIVA)) {
+                        datosPasajero.gclase.setText(comclase);
+                    } else {
+                        datosPasajero.gclase.setText(comclase);
+                    }
+                    String comubicacion = boxubicacion.getSelectedItem().toString();
+                    //String subucacion = (String) boxubicacion.getSelectedItem();
+                    if (comubicacion.equals(ubicacion.VENTANA)) {
+                        datosPasajero.gubicacion.setText(comubicacion);
+                    } else if (comubicacion.equals(ubicacion.PASILLO)) {
+                        datosPasajero.gubicacion.setText(comubicacion);
+                    } else {
+                        datosPasajero.gubicacion.setText(comubicacion);
+                    }
+
+                    silla = avion.asiganarSilla(clase, ubicacion, pasajero);
+                    if (silla == null) {
+                        JOptionPane.showMessageDialog(this, "No hay sillas disponibles con dichas características", "Registro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+
+                    }
+
+                }
+            }
+        }
         /*
-         //CLASE
-         String i=boxclase.getSelectedItem().toString();
-         if(silla.getClase() == Clase.ECONOMICA){
-         i = "ECONOMICA";
-         }else if(silla.getClase() == Clase.EJERCUTIVA){
-         i = "EJECUTIVA";
-         }
-         p.gclase.setText(i);
-
-         //UBICACION
-         String subicacion;
-         if (silla.getUbicacion() == Ubicacion.CENTRAL) {
-         subicacion = "Centro";
-         } else if (silla.getUbicacion() == Ubicacion.PASILLO) {
-         subicacion = "Pasillo";
-         } else {
-         subicacion = "Ventana";
-         }
-         p.gubicacion.setText(subicacion);
+         datosPasajero.gnombre.setText(nombre);
+         datosPasajero.gcedula.setText(cedula);
+         datosPasajero.gclase.setText(comclase);
+         datosPasajero.gubicacion.setText(comubicacion);
          */
+
     }//GEN-LAST:event_btnregistrarActionPerformed
 
     private void boxclaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxclaseActionPerformed
-  
+
     }//GEN-LAST:event_boxclaseActionPerformed
 
     private void btncancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarActionPerformed
-      
-       
-      
+
+
     }//GEN-LAST:event_btncancelarActionPerformed
 
     private void boxubicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxubicacionActionPerformed
@@ -254,9 +285,9 @@ public class RegistrarPasajero extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JComboBox boxclase;
-    public javax.swing.JComboBox boxubicacion;
-    public javax.swing.JButton btncancelar;
+    public static javax.swing.JComboBox boxclase;
+    public static javax.swing.JComboBox boxubicacion;
+    public static javax.swing.JButton btncancelar;
     public javax.swing.JButton btnregistrar;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
